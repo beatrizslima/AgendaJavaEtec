@@ -10,11 +10,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,6 +37,62 @@ public class Inicio2_GUI extends javax.swing.JFrame {
  String password = "";  // senha do BD
         
    // --> FIM 
+ 
+ //-->Inicio Atualiza tabela
+ 
+ public static DefaultTableModel clientes(ResultSet rs) {
+        try {
+           ResultSetMetaData metaData = rs.getMetaData();
+         int numberOfColumns = metaData.getColumnCount();
+            Vector columnNames = new Vector();
+       // AS LINHAS ABAIXO SÃO REFERENTES AOS CAMPOS DA TABELA CLIENTE
+            columnNames.addElement("Código");
+            columnNames.addElement("Nome");
+            columnNames.addElement("E-mail");
+            columnNames.addElement("Telefone");
+         
+            Vector rows = new Vector();
+            while (rs.next()) {
+                Vector newRow = new Vector();
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    newRow.addElement(rs.getObject(i));
+                }
+                rows.addElement(newRow);
+            }
+           return new DefaultTableModel(rows, columnNames);
+       } catch (Exception ex) {
+
+           return null;
+        }
+        }
+ 
+          public void refresh(){
+    
+try{
+   Connection conn;
+          conn = (Connection) DriverManager.getConnection(url, username, password);
+     
+    
+    System.out.println("realizado");
+    String sql = "SELECT * FROM clientes";
+PreparedStatement pst = (PreparedStatement) conn.prepareStatement(sql);
+ResultSet rs = pst.executeQuery();
+tabela.setModel(clientes(rs));
+}
+catch(Exception ex){
+JOptionPane.showMessageDialog(null, "Não deu, camarada");
+}    
+    } 
+
+
+ 
+ 
+ 
+ //--> Fim Atualiza tabela
+ 
+ 
+ 
+ 
     
     public Inicio2_GUI() {
         initComponents();
@@ -348,8 +407,9 @@ public class Inicio2_GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Digite os dados corretamente","ERRO",0);
             tel1.setText("");
         }
-        
+        refresh();
         //-->Fim
+        
     }//GEN-LAST:event_GRAVARActionPerformed
 
     private void nomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeActionPerformed
@@ -433,7 +493,7 @@ public class Inicio2_GUI extends javax.swing.JFrame {
 
     private void alterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarActionPerformed
         //-->inicio
-        nom = nome.getText(); // recebendo o nome
+        nom = nome1.getText(); // recebendo o nome
         em = email1.getText(); // recebendo o email         
         telefone = Long.valueOf(tel1.getText());// recebendo o telefone
 
@@ -453,10 +513,12 @@ public class Inicio2_GUI extends javax.swing.JFrame {
                 inserir.execute(); // Executando a inserção
 
                 JOptionPane.showMessageDialog(null,"\nInserção realizada com sucesso!!!\n","",-1);
+                
                 nome1.setText("");
                 email1.setText("");
                 tel1.setText("");
                 codigo.setText("");
+                
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,"\n Erro na inserção!","ERRO!",0);
             }
@@ -466,7 +528,7 @@ public class Inicio2_GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Digite os dados corretamente, preencher telefone novamente","ERRO",0);
             tel1.setText("");
         }    
-
+            refresh();
         //-->fim
     }//GEN-LAST:event_alterarActionPerformed
 
@@ -515,7 +577,7 @@ public class Inicio2_GUI extends javax.swing.JFrame {
             codigo.setText("");
 
         }
-
+            refresh();
         //-->fim
     }//GEN-LAST:event_excluirActionPerformed
 

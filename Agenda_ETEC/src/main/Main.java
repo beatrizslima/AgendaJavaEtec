@@ -7,6 +7,7 @@ package main;
 
 import View.Inicio2_GUI;
 import View.Inicio_GUI;
+import View.Splash_GUI;
 
 /**
  *
@@ -19,7 +20,7 @@ public class Main {
      */
     public static void main(String[] args) {
         Controller.Testa_DB.conecta();
-        new Inicio2_GUI().setVisible(true);
+        new Splash_GUI().setVisible(true);
     }
     
 }
