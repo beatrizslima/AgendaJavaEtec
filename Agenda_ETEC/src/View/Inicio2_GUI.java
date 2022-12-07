@@ -505,7 +505,7 @@ JOptionPane.showMessageDialog(null, "Não deu, camarada");
       }catch (Exception ex) {
             Logger.getLogger(Inicio2_GUI.class.getName()).log(Level.SEVERE, null, ex);
       }
-            String sql = "UPDATE clientes SET cli_nome='"+nom+"',cli_email='"+email+"',cli_tel='"+telefone+"' WHERE cli_cod="+codigo.getText();
+            String sql = "UPDATE clientes SET cli_nome='"+nom+"',cli_email='"+em+"',cli_tel='"+telefone+"' WHERE cli_cod="+codigo.getText();
             
      
             try { 
